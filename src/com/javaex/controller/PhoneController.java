@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.dao.PhoneDao;
+import com.javaex.util.WebUtil;
 import com.javaex.vo.PersonVo;
 
 @WebServlet("/pbc")
@@ -25,6 +26,7 @@ public class PhoneController extends HttpServlet {
 		System.out.println(action);
 		
 		//action = list 이면 
+		/*
 		if("list".equals(action)) {
 			
 			//리스트 출력 관련
@@ -38,14 +40,26 @@ public class PhoneController extends HttpServlet {
 			request.setAttribute("pList", personList); 	//(실제데이터를 꺼낼때 붙여주는 별명, 보낼 실제 테이터)
 			
 			//jsp에 포워드 시킨다.
+			/*
 			RequestDispatcher rd = request.getRequestDispatcher("./WEB-INF/list.jsp");	//jsp 파일 위치를 알려줌
 			rd.forward(request, response);
-		} else if ("wform".equals(action)) {	
+			*/
+			
+			//String path = "./WEB-INF/writeForm.jsp";
+			//WebUtil.forward(request, response, "./WEB-INF/list.jsp");
+		
+			//} 
+		if ("wform".equals(action)) {	
 		//action = wform --> 등록폼
 			System.out.println("등록 폼 처리");
 			
+			/*
 			RequestDispatcher rd = request.getRequestDispatcher("./WEB-INF/writeForm.jsp");
 			rd.forward(request, response);
+			*/
+			
+			WebUtil.forward(request, response, "./WEB-INF/writeForm.jsp");
+			
 		} else if ("insert".equals(action)) {
 		//action = insert
 			System.out.println("전화번호 저장");
@@ -62,7 +76,9 @@ public class PhoneController extends HttpServlet {
 			PhoneDao phoneDao = new PhoneDao();
 			phoneDao.personInsert(personVo);
 			
-			response.sendRedirect("/phonebook2/pbc?action=list");
+			//response.sendRedirect("/phonebook2/pbc?action=list");
+			
+			WebUtil.redirect(request, response, "/phonebook2/pbc");
 			
 		} else if ("uform".equals(action)) {
 			//action = uform --> 수정폼
@@ -75,9 +91,13 @@ public class PhoneController extends HttpServlet {
 			
 			//데이터를 전달
 			request.setAttribute("pvo", personVo);
-			
+			/*
 			RequestDispatcher rd = request.getRequestDispatcher("./WEB-INF/updateForm.jsp");
 			rd.forward(request, response);
+			*/
+			
+			WebUtil.forward(request, response, "./WEB-INF/updateForm.jsp");
+			
 		} else if ("update".equals(action)) {
 			//action = update
 			System.out.println("전화번호 수정");
@@ -92,7 +112,9 @@ public class PhoneController extends HttpServlet {
 			PhoneDao phoneDao = new PhoneDao();
 			phoneDao.personUpdate(personVo);
 			
-			response.sendRedirect("/phonebook2/pbc?action=list");
+			//response.sendRedirect("/phonebook2/pbc?action=list");
+			
+			WebUtil.redirect(request, response, "/phonebook2/pbc");
 			
 		} else if ("delete".equals(action)) {
 			//action = delete
@@ -103,7 +125,28 @@ public class PhoneController extends HttpServlet {
 			PhoneDao phoneDao = new PhoneDao();
 			phoneDao.personDelete(personId);
 			
-			response.sendRedirect("/phonebook2/pbc?action=list");
+			//response.sendRedirect("/phonebook2/pbc?action=list");
+			
+			WebUtil.redirect(request, response, "/phonebook2/pbc");
+		} else {
+			//리스트 출력 관련
+			//리스트 출력 처리
+			PhoneDao phoneDao = new PhoneDao();
+			List<PersonVo> personList = phoneDao.getPersonList();
+				
+			//html --> 엄청 복잡하다. --> jsp가 편하다.
+				
+			//데이터 전달
+			request.setAttribute("pList", personList); 	//(실제데이터를 꺼낼때 붙여주는 별명, 보낼 실제 테이터)
+				
+			//jsp에 포워드 시킨다.
+			/*
+			RequestDispatcher rd = request.getRequestDispatcher("./WEB-INF/list.jsp");	//jsp 파일 위치를 알려줌
+			rd.forward(request, response);
+			*/
+				
+			//String path = "./WEB-INF/writeForm.jsp";
+			WebUtil.forward(request, response, "./WEB-INF/list.jsp");
 		}
 		
 	}
